@@ -80,15 +80,22 @@
                 </div>
             </div>
              <div class="flex flex-wrap gap-3 justify-center mb-6">
-                    <button onclick="hitungRekapMingguan()" class="btn bg-teal-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-teal-600 shadow-md flex items-center gap-2">
-                        <i class="fas fa-calendar-week"></i> Rekap Minggu
-                    </button>
-                    <button onclick="hitungRekapBulanan()" class="btn bg-green-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-green-600 shadow-md flex items-center gap-2">
-                        <i class="fas fa-calendar-alt"></i> Rekap Bulan
-                    </button>
-                    <button onclick="exportToCSV()" class="btn bg-sky-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-sky-600 shadow-md flex items-center gap-2">
-                        <i class="fas fa-file-csv"></i> Ekspor
-                    </button>
+                    <div class="flex gap-1">
+                        <button onclick="hitungRekapMingguan()" class="btn bg-teal-500 text-white font-bold py-2 px-4 rounded-l-lg hover:bg-teal-600 shadow-md flex items-center gap-2">
+                            <i class="fas fa-calendar-week"></i> Rekap Minggu
+                        </button>
+                        <button onclick="exportWeeklyCSV()" class="btn bg-sky-500 text-white font-bold py-2 px-4 rounded-r-lg hover:bg-sky-600 shadow-md flex items-center gap-2">
+                            <i class="fas fa-file-csv"></i> Ekspor
+                        </button>
+                    </div>
+                    <div class="flex gap-1">
+                        <button onclick="hitungRekapBulanan()" class="btn bg-green-500 text-white font-bold py-2 px-4 rounded-l-lg hover:bg-green-600 shadow-md flex items-center gap-2">
+                            <i class="fas fa-calendar-alt"></i> Rekap Bulan
+                        </button>
+                         <button onclick="exportMonthlyCSV()" class="btn bg-sky-500 text-white font-bold py-2 px-4 rounded-r-lg hover:bg-sky-600 shadow-md flex items-center gap-2">
+                            <i class="fas fa-file-csv"></i> Ekspor
+                        </button>
+                    </div>
                     <button onclick="showConfirmation('clear')" class="btn bg-red-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-red-600 shadow-md flex items-center gap-2">
                         <i class="fas fa-undo"></i> Clear Hari
                     </button>
@@ -146,7 +153,7 @@
 
         // --- Variabel Global & Konfigurasi Firebase ---
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-       const firebaseConfig = {
+        const firebaseConfig = {
             apiKey: "AIzaSyBeaaGL7wbmaa7k3cup2apImvHcT6E0yhM",
             authDomain: "absensi-online-nagrak.firebaseapp.com",
             projectId: "absensi-online-nagrak",
@@ -410,10 +417,9 @@
             }
         }
         
-        async function getAndProcessRecapData(q) {
-            const querySnapshot = await getDocs(q);
+        async function getAndProcessRecapData(docs) {
             const recapData = {};
-            querySnapshot.forEach(doc => {
+            docs.forEach(doc => {
                 const data = doc.data();
                 if (!recapData[data.studentId]) {
                     recapData[data.studentId] = { SK: 0, SP: 0, I: 0, A: 0 };
@@ -458,15 +464,14 @@
             rekapTitle.textContent = `Ringkasan Rekapitulasi Mingguan (Tgl ${startDay}-${endDay})`;
 
             const attendanceRef = collection(db, `/artifacts/${appId}/public/data/attendance`);
-            const q = query(attendanceRef, 
-                where("year", "==", year), 
-                where("month", "==", month), 
-                where("class", "==", currentClass),
-                where("day", ">=", startDay),
-                where("day", "<=", endDay)
-            );
+            const monthQuery = query(attendanceRef, where("year", "==", year), where("month", "==", month), where("class", "==", currentClass));
+            const monthQuerySnapshot = await getDocs(monthQuery);
+            const weeklyDocs = monthQuerySnapshot.docs.filter(doc => {
+                const day = doc.data().day;
+                return day >= startDay && day <= endDay;
+            });
             
-            const recapData = await getAndProcessRecapData(q);
+            const recapData = await getAndProcessRecapData(weeklyDocs);
             displayRecap(recapData);
         }
 
@@ -486,11 +491,77 @@
             const attendanceRef = collection(db, `/artifacts/${appId}/public/data/attendance`);
             const q = query(attendanceRef, where("year", "==", year), where("month", "==", month), where("class", "==", currentClass));
             
-            const recapData = await getAndProcessRecapData(q);
+            const querySnapshot = await getDocs(q);
+            const recapData = await getAndProcessRecapData(querySnapshot.docs);
             displayRecap(recapData);
         }
 
-        window.exportToCSV = async function() {
+        function generateAndDownloadCSV(recapData, fileName) {
+            const students = allStudentsData[currentClass] || [];
+            let csvContent = "";
+            const headers = [`"Nama Siswa"`, `"Total SK"`, `"Total SP"`, `"Total I"`, `"Total A"`];
+            csvContent += headers.join(";") + "\r\n";
+
+            let exportedRowCount = 0;
+            students.forEach(student => {
+                const counts = recapData[student.id];
+                if (counts && (counts.SK > 0 || counts.SP > 0 || counts.I > 0 || counts.A > 0)) {
+                    let row = [
+                        `"${student.name}"`,
+                        `"${counts.SK || 0}"`,
+                        `"${counts.SP || 0}"`,
+                        `"${counts.I || 0}"`,
+                        `"${counts.A || 0}"`
+                    ];
+                    csvContent += row.join(";") + "\r\n";
+                    exportedRowCount++;
+                }
+            });
+
+            if (exportedRowCount === 0) {
+                alert('Tidak ada data ketidakhadiran untuk diekspor pada periode ini.');
+                return;
+            }
+
+            const blob = new Blob(["\uFEFF" + csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement("a");
+            const url = URL.createObjectURL(blob);
+            link.setAttribute("href", url);
+            link.setAttribute("download", fileName);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        window.exportWeeklyCSV = async function() {
+            const students = allStudentsData[currentClass] || [];
+            if (students.length === 0 || !weekSelector.value) {
+                alert('Pilih kelas dan minggu terlebih dahulu untuk diekspor.');
+                return;
+            }
+
+            const year = parseInt(yearSelector.value);
+            const month = parseInt(monthSelector.value);
+            const monthName = monthSelector.options[monthSelector.selectedIndex].text;
+            const weekText = weekSelector.options[weekSelector.selectedIndex].textContent.split(' ')[1];
+            
+            alert(`Mempersiapkan ekspor untuk ${currentClass} ${monthName} ${year}, Minggu ke-${weekText}...`);
+            
+            const [startDay, endDay] = weekSelector.value.split('-').map(Number);
+            const attendanceRef = collection(db, `/artifacts/${appId}/public/data/attendance`);
+            const monthQuery = query(attendanceRef, where("year", "==", year), where("month", "==", month), where("class", "==", currentClass));
+            const monthQuerySnapshot = await getDocs(monthQuery);
+            const weeklyDocs = monthQuerySnapshot.docs.filter(doc => {
+                const day = doc.data().day;
+                return day >= startDay && day <= endDay;
+            });
+
+            const recapData = await getAndProcessRecapData(weeklyDocs);
+            const fileName = `rekap_mingguan_${currentClass.replace(/\s+/g, '_')}_${monthName}_${year}_Minggu_${weekText}.csv`;
+            generateAndDownloadCSV(recapData, fileName);
+        }
+
+        window.exportMonthlyCSV = async function() {
             const students = allStudentsData[currentClass] || [];
             if (students.length === 0) {
                 alert('Tidak ada data siswa untuk diekspor.');
@@ -505,41 +576,13 @@
 
             const attendanceRef = collection(db, `/artifacts/${appId}/public/data/attendance`);
             const q = query(attendanceRef, where("year", "==", year), where("month", "==", month), where("class", "==", currentClass));
-            const monthlyData = await getAndProcessRecapData(q);
-
-            let csvContent = "data:text/csv;charset=utf-8,";
-            let headers = ["Nama Siswa", "Total SK", "Total SP", "Total I", "Total A"];
-            csvContent += headers.join(";") + "\r\n";
-
-            let exportedRowCount = 0;
-            students.forEach(student => {
-                const counts = monthlyData[student.id];
-                if (counts && (counts.SK > 0 || counts.SP > 0 || counts.I > 0 || counts.A > 0)) {
-                    let row = [
-                        `"${student.name}"`,
-                        counts.SK || 0,
-                        counts.SP || 0,
-                        counts.I || 0,
-                        counts.A || 0
-                    ];
-                    csvContent += row.join(";") + "\r\n";
-                    exportedRowCount++;
-                }
-            });
-
-            if (exportedRowCount === 0) {
-                alert('Tidak ada data ketidakhadiran untuk diekspor pada bulan ini.');
-                return;
-            }
-
-            const encodedUri = encodeURI(csvContent);
-            const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", `rekap_absensi_${currentClass.replace(/\s+/g, '_')}_${monthName}_${year}.csv`);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+            
+            const querySnapshot = await getDocs(q);
+            const recapData = await getAndProcessRecapData(querySnapshot.docs);
+            const fileName = `rekap_bulanan_${currentClass.replace(/\s+/g, '_')}_${monthName}_${year}.csv`;
+            generateAndDownloadCSV(recapData, fileName);
         }
+
 
         // --- Fungsi Modal & Aksi ---
         window.showConfirmation = function(type, id = null, name = null) {
