@@ -37,6 +37,11 @@
             outline: 2px solid #6366f1;
             background-color: #eef2ff;
         }
+        .saving {
+            opacity: 0.5;
+            background-color: #fef3c7;
+            transition: opacity 0.2s ease-in-out;
+        }
     </style>
 </head>
 <body class="text-gray-800 p-4 sm:p-6 md:p-8">
@@ -96,9 +101,14 @@
                             <i class="fas fa-file-csv"></i> Ekspor
                         </button>
                     </div>
-                    <button onclick="showConfirmation('clear')" class="btn bg-red-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-red-600 shadow-md flex items-center gap-2">
-                        <i class="fas fa-undo"></i> Clear Hari
-                    </button>
+                    <div class="flex items-center gap-1">
+                        <button id="clear-day-btn" onclick="showConfirmation('clear')" class="btn bg-red-500 text-white font-bold py-2 px-4 rounded-lg shadow-md flex items-center gap-2" disabled>
+                            <i class="fas fa-undo"></i> Clear Hari
+                        </button>
+                        <button id="lock-clear-day-btn" onclick="toggleClearDayLock()" class="btn bg-yellow-400 text-white font-bold py-2 px-3 rounded-lg shadow-md">
+                            <i id="clear-day-lock-icon" class="fas fa-lock"></i>
+                        </button>
+                    </div>
                     <div class="flex items-center gap-1">
                         <button id="naik-kelas-btn" onclick="showConfirmation('naikKelas')" class="btn bg-purple-500 text-white font-bold py-2 px-4 rounded-lg shadow-md flex items-center gap-2" disabled>
                             <i class="fas fa-graduation-cap"></i> Naik Kelas
@@ -153,7 +163,7 @@
 
         // --- Variabel Global & Konfigurasi Firebase ---
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        const firebaseConfig = {
+       const firebaseConfig = {
             apiKey: "AIzaSyBeaaGL7wbmaa7k3cup2apImvHcT6E0yhM",
             authDomain: "absensi-online-nagrak.firebaseapp.com",
             projectId: "absensi-online-nagrak",
@@ -161,7 +171,7 @@
             messagingSenderId: "284464759114",
             appId: "1:284464759114:web:0f5eb44f9dc24119b001b3",
             measurementId: "G-VZ0Q81PYQ0"
-        };
+        };       
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
@@ -211,10 +221,14 @@
         const lockNaikKelasBtn = document.getElementById('lock-naik-kelas-btn');
         const lockIcon = document.getElementById('lock-icon');
         const userInfo = document.getElementById('user-info');
+        const clearDayBtn = document.getElementById('clear-day-btn');
+        const lockClearDayBtn = document.getElementById('lock-clear-day-btn');
+        const clearDayLockIcon = document.getElementById('clear-day-lock-icon');
         
         let currentClass = Object.keys(allStudentsData)[0];
         let studentIdToDelete = null;
         let isNaikKelasLocked = true;
+        let isClearDayLocked = true;
 
         // --- FUNGSI-FUNGSI UTAMA ---
         function getTahunPelajaran() {
@@ -318,9 +332,25 @@
             });
         }
 
+        function updateSelectColor(selectElement) {
+            selectElement.classList.remove('bg-red-200', 'text-red-800', 'bg-yellow-200', 'text-yellow-800', 'bg-blue-200', 'text-blue-800', 'bg-green-200', 'text-green-800', 'bg-white');
+            const value = selectElement.value;
+            if (value === 'A') {
+                selectElement.classList.add('bg-red-200', 'text-red-800');
+            } else if (value === 'SP') {
+                selectElement.classList.add('bg-yellow-200', 'text-yellow-800');
+            } else if (value === 'SK') {
+                selectElement.classList.add('bg-blue-200', 'text-blue-800');
+            } else if (value === 'I') {
+                selectElement.classList.add('bg-green-200', 'text-green-800');
+            } else {
+                selectElement.classList.add('bg-white');
+            }
+        }
+
         function createAttendanceSelect(studentId, hour) {
             const select = document.createElement('select');
-            select.className = "w-16 p-1 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 text-xs";
+            select.className = "w-16 p-1 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 text-xs transition-all";
             select.setAttribute('data-student-id', studentId);
             select.setAttribute('data-hour', hour);
             const options = [ { value: '', text: '-' }, { value: 'SK', text: 'SK' }, { value: 'SP', text: 'SP' }, { value: 'I', text: 'I' }, { value: 'A', text: 'A' } ];
@@ -330,7 +360,21 @@
                 option.textContent = opt.text;
                 select.appendChild(option);
             });
-            select.onchange = (e) => saveAttendance(studentId, hour, e.target.value);
+            select.onchange = async (e) => {
+                const selectElement = e.target;
+                selectElement.classList.add('saving');
+                updateSelectColor(selectElement);
+                try {
+                    await saveAttendance(studentId, hour, selectElement.value);
+                } catch (error) {
+                    console.error("Gagal menyimpan absensi:", error);
+                } finally {
+                    setTimeout(() => {
+                        selectElement.classList.remove('saving');
+                    }, 500);
+                }
+            };
+            updateSelectColor(select);
             return select;
         }
 
@@ -662,6 +706,23 @@
             hideConfirmation();
         }
 
+        function updateClearDayButtonState() {
+            clearDayBtn.disabled = isClearDayLocked;
+            clearDayBtn.classList.toggle('bg-gray-400', isClearDayLocked);
+            clearDayBtn.classList.toggle('cursor-not-allowed', isClearDayLocked);
+            clearDayBtn.classList.toggle('hover:bg-gray-400', isClearDayLocked);
+            clearDayBtn.classList.toggle('bg-red-500', !isClearDayLocked);
+            clearDayBtn.classList.toggle('hover:bg-red-600', !isClearDayLocked);
+            clearDayLockIcon.className = isClearDayLocked ? 'fas fa-lock' : 'fas fa-unlock';
+            lockClearDayBtn.classList.toggle('bg-green-500', !isClearDayLocked);
+            lockClearDayBtn.classList.toggle('bg-yellow-400', isClearDayLocked);
+        }
+
+        window.toggleClearDayLock = function() {
+            isClearDayLocked = !isClearDayLocked;
+            updateClearDayButtonState();
+        }
+
         window.updateNaikKelasButtonState = function() {
             naikKelasBtn.disabled = isNaikKelasLocked;
             naikKelasBtn.classList.toggle('bg-gray-400', isNaikKelasLocked);
@@ -753,12 +814,16 @@
             const q = query(attendanceRef, where("year", "==", year), where("month", "==", month), where("day", "==", day), where("class", "==", currentClass));
             
             unsubscribeAttendance = onSnapshot(q, (querySnapshot) => {
-                document.querySelectorAll('#attendance-body select').forEach(sel => sel.value = '');
+                document.querySelectorAll('#attendance-body select').forEach(sel => {
+                    sel.value = '';
+                    updateSelectColor(sel);
+                });
                 querySnapshot.forEach((doc) => {
                     const data = doc.data();
                     const select = document.querySelector(`select[data-student-id='${data.studentId}'][data-hour='${data.hour}']`);
                     if (select) {
                         select.value = data.status;
+                        updateSelectColor(select);
                     }
                 });
             });
@@ -789,6 +854,7 @@
             populateDateSelectors();
             populateClassSelector();
             updateNaikKelasButtonState();
+            updateClearDayButtonState();
             
             onAuthStateChanged(auth, async (user) => {
                 if (user) {
