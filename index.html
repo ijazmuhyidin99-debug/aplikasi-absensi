@@ -163,7 +163,7 @@
 
         // --- Variabel Global & Konfigurasi Firebase ---
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-       const firebaseConfig = {
+        const firebaseConfig = {
             apiKey: "AIzaSyBeaaGL7wbmaa7k3cup2apImvHcT6E0yhM",
             authDomain: "absensi-online-nagrak.firebaseapp.com",
             projectId: "absensi-online-nagrak",
@@ -249,20 +249,18 @@
             currentDateElem.textContent = now.toLocaleDateString('id-ID', options);
         }
         
-        function populateDateSelectors(savedSelection = {}) {
+        function populateDateSelectors() {
             const now = new Date();
-            const currentYear = savedSelection.year || now.getFullYear();
-            const currentMonth = savedSelection.month || now.getMonth();
-
+            const currentYear = now.getFullYear();
+            const currentMonth = now.getMonth();
             yearSelector.innerHTML = '';
-            for (let i = now.getFullYear() - 5; i <= now.getFullYear() + 5; i++) {
+            for (let i = currentYear - 5; i <= currentYear + 5; i++) {
                 const option = document.createElement('option');
                 option.value = i;
                 option.textContent = i;
                 yearSelector.appendChild(option);
             }
             yearSelector.value = currentYear;
-
             monthSelector.innerHTML = '';
             const months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
             months.forEach((month, index) => {
@@ -272,13 +270,8 @@
                 monthSelector.appendChild(option);
             });
             monthSelector.value = currentMonth;
-            
             populateDaySelector();
             populateWeekSelector();
-
-            if (savedSelection.day) {
-                daySelector.value = savedSelection.day;
-            }
         }
 
         function populateDaySelector() {
@@ -835,28 +828,12 @@
                 });
             });
         }
-        
-        function saveCurrentSelection() {
-            const selection = {
-                class: classSelector.value,
-                year: yearSelector.value,
-                month: monthSelector.value,
-                day: daySelector.value,
-            };
-            localStorage.setItem('absensi-selection', JSON.stringify(selection));
-        }
-
-        function loadCurrentSelection() {
-            const saved = localStorage.getItem('absensi-selection');
-            return saved ? JSON.parse(saved) : {};
-        }
 
         // --- EVENT LISTENERS & INISIALISASI ---
         function updateViewForNewDate() {
             currentClass = classSelector.value;
             rekapContent.innerHTML = 'Pilih periode (mingguan/bulanan) dan klik tombol rekap untuk melihat ringkasan.';
             renderTable();
-            saveCurrentSelection();
         }
 
         function handleMonthOrYearChange() {
@@ -874,17 +851,8 @@
         
         document.addEventListener('DOMContentLoaded', () => {
             updateHeader();
-            const savedSelection = loadCurrentSelection();
-            
+            populateDateSelectors();
             populateClassSelector();
-            if (savedSelection.class) {
-                classSelector.value = savedSelection.class;
-            }
-            
-            populateDateSelectors(savedSelection);
-            
-            currentClass = classSelector.value;
-
             updateNaikKelasButtonState();
             updateClearDayButtonState();
             
