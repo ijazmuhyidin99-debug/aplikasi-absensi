@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,22 +9,66 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
         body {
             font-family: 'Inter', sans-serif;
             background: linear-gradient(to top right, #e0e7ff, #f3e8ff);
             min-height: 100vh;
         }
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb { background: #a8a8a8; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #888; }
-        .table-container { max-width: 100%; overflow-x: auto; border: 1px solid #e2e8f0; border-radius: 0.75rem; }
-        thead th { position: sticky; top: 0; z-index: 10; }
-        tbody tr:nth-child(odd) { background-color: #ffffff; }
-        tbody tr:nth-child(even) { background-color: #f9fafb; }
-        tbody tr:hover { background-color: #f1f5f9; }
-        .btn { transition: all 0.2s ease-in-out; }
-        .btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #a8a8a8;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #888;
+        }
+
+        .table-container {
+            max-width: 100%;
+            overflow-x: auto;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.75rem;
+        }
+
+        thead th {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        tbody tr:nth-child(odd) {
+            background-color: #ffffff;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f9fafb;
+        }
+
+        tbody tr:hover {
+            background-color: #f1f5f9;
+        }
+
+        .btn {
+            transition: all 0.2s ease-in-out;
+        }
+
+        .btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
         #loader {
             border: 4px solid #f3f3f3;
             border-top: 4px solid #6366f1;
@@ -32,71 +77,98 @@
             height: 40px;
             animation: spin 1s linear infinite;
         }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
     </style>
 </head>
+
 <body class="text-gray-800 p-4 sm:p-6 md:p-8">
 
     <div class="max-w-screen-xl mx-auto">
         <header class="mb-8 text-center">
             <h1 id="header-title" class="text-4xl font-bold text-gray-900">Sistem Absensi Siswa</h1>
             <p id="header-subtitle" class="text-gray-500 mt-2"></p>
-            <div id="current-date" class="mt-2 text-sm font-medium text-gray-500 bg-white/60 backdrop-blur-sm inline-block px-3 py-1 rounded-full"></div>
+            <div id="current-date"
+                class="mt-2 text-sm font-medium text-gray-500 bg-white/60 backdrop-blur-sm inline-block px-3 py-1 rounded-full">
+            </div>
             <div id="user-info" class="mt-2 text-xs text-gray-400"></div>
         </header>
 
         <main class="bg-white p-6 rounded-2xl shadow-lg">
             <!-- Panel Kontrol -->
-            <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4 p-4 bg-gray-50 rounded-lg border">
+            <div
+                class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4 p-4 bg-gray-50 rounded-lg border">
                 <div class="flex flex-wrap items-center gap-4 w-full md:w-auto">
                     <div class="flex items-center gap-2">
                         <label for="kelas-selector" class="font-semibold text-gray-700">Kelas:</label>
-                        <select id="kelas-selector" class="block w-full md:w-32 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"></select>
+                        <select id="kelas-selector"
+                            class="block w-full md:w-32 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"></select>
                     </div>
                     <div class="flex items-center gap-2">
                         <label for="year-selector" class="font-semibold text-gray-700">Tahun:</label>
-                        <select id="year-selector" class="block w-full md:w-24 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"></select>
+                        <select id="year-selector"
+                            class="block w-full md:w-24 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"></select>
                     </div>
                     <div class="flex items-center gap-2">
                         <label for="month-selector" class="font-semibold text-gray-700">Bulan:</label>
-                        <select id="month-selector" class="block w-full md:w-32 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"></select>
+                        <select id="month-selector"
+                            class="block w-full md:w-32 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"></select>
                     </div>
-                     <div class="flex items-center gap-2">
+                    <div class="flex items-center gap-2">
                         <label for="day-selector" class="font-semibold text-gray-700">Hari (Input):</label>
-                        <select id="day-selector" class="block w-full md:w-40 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"></select>
+                        <select id="day-selector"
+                            class="block w-full md:w-40 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"></select>
                     </div>
-                     <div class="flex items-center gap-2">
+                    <div class="flex items-center gap-2">
                         <label for="week-selector" class="font-semibold text-gray-700">Minggu (Rekap):</label>
-                        <select id="week-selector" class="block w-full md:w-48 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"></select>
+                        <select id="week-selector"
+                            class="block w-full md:w-48 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"></select>
                     </div>
                 </div>
                 <div class="flex-grow relative w-full md:w-auto mt-4 md:mt-0">
-                    <input type="text" id="tambahSiswaInput" placeholder="Nama Siswa Baru..." class="w-full pl-4 pr-24 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
-                    <button onclick="tambahSiswa()" class="absolute right-1 top-1/2 -translate-y-1/2 bg-indigo-500 text-white px-4 py-1 rounded-md hover:bg-indigo-600 transition-colors text-sm font-semibold">Tambah</button>
+                    <input type="text" id="tambahSiswaInput" placeholder="Nama Siswa Baru..."
+                        class="w-full pl-4 pr-24 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
+                    <button onclick="tambahSiswa()"
+                        class="absolute right-1 top-1/2 -translate-y-1/2 bg-indigo-500 text-white px-4 py-1 rounded-md hover:bg-indigo-600 transition-colors text-sm font-semibold">Tambah</button>
                 </div>
             </div>
-             <div class="flex flex-wrap gap-3 justify-center mb-6">
-                    <button onclick="hitungRekapMingguan()" class="btn bg-teal-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-teal-600 shadow-md flex items-center gap-2">
-                        <i class="fas fa-calendar-week"></i> Rekap Minggu
+            <div class="flex flex-wrap gap-3 justify-center mb-6">
+                <button onclick="hitungRekapMingguan()"
+                    class="btn bg-teal-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-teal-600 shadow-md flex items-center gap-2">
+                    <i class="fas fa-calendar-week"></i> Rekap Minggu
+                </button>
+                <button onclick="hitungRekapBulanan()"
+                    class="btn bg-green-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-green-600 shadow-md flex items-center gap-2">
+                    <i class="fas fa-calendar-alt"></i> Rekap Bulan
+                </button>
+                <button onclick="exportToCSV()"
+                    class="btn bg-sky-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-sky-600 shadow-md flex items-center gap-2">
+                    <i class="fas fa-file-csv"></i> Ekspor
+                </button>
+                <button onclick="showConfirmation('clear')"
+                    class="btn bg-red-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-red-600 shadow-md flex items-center gap-2">
+                    <i class="fas fa-undo"></i> Clear Hari
+                </button>
+                <div class="flex items-center gap-1">
+                    <button id="naik-kelas-btn" onclick="showConfirmation('naikKelas')"
+                        class="btn bg-purple-500 text-white font-bold py-2 px-4 rounded-lg shadow-md flex items-center gap-2"
+                        disabled>
+                        <i class="fas fa-graduation-cap"></i> Naik Kelas
                     </button>
-                    <button onclick="hitungRekapBulanan()" class="btn bg-green-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-green-600 shadow-md flex items-center gap-2">
-                        <i class="fas fa-calendar-alt"></i> Rekap Bulan
+                    <button id="lock-naik-kelas-btn" onclick="toggleNaikKelasLock()"
+                        class="btn bg-yellow-400 text-white font-bold py-2 px-3 rounded-lg shadow-md">
+                        <i id="lock-icon" class="fas fa-lock"></i>
                     </button>
-                    <button onclick="exportToCSV()" class="btn bg-sky-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-sky-600 shadow-md flex items-center gap-2">
-                        <i class="fas fa-file-csv"></i> Ekspor
-                    </button>
-                    <button onclick="showConfirmation('clear')" class="btn bg-red-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-red-600 shadow-md flex items-center gap-2">
-                        <i class="fas fa-undo"></i> Clear Hari
-                    </button>
-                    <div class="flex items-center gap-1">
-                        <button id="naik-kelas-btn" onclick="showConfirmation('naikKelas')" class="btn bg-purple-500 text-white font-bold py-2 px-4 rounded-lg shadow-md flex items-center gap-2" disabled>
-                            <i class="fas fa-graduation-cap"></i> Naik Kelas
-                        </button>
-                        <button id="lock-naik-kelas-btn" onclick="toggleNaikKelasLock()" class="btn bg-yellow-400 text-white font-bold py-2 px-3 rounded-lg shadow-md">
-                            <i id="lock-icon" class="fas fa-lock"></i>
-                        </button>
-                    </div>
                 </div>
+            </div>
 
             <!-- Tabel Absensi -->
             <div class="table-container shadow-md">
@@ -105,7 +177,12 @@
                         <!-- Header content is generated by JavaScript -->
                     </thead>
                     <tbody id="attendance-body">
-                        <tr><td colspan="12" class="text-center py-10"><div id="loader" class="mx-auto"></div><p class="mt-2 text-gray-500">Menghubungkan ke database...</p></td></tr>
+                        <tr>
+                            <td colspan="12" class="text-center py-10">
+                                <div id="loader" class="mx-auto"></div>
+                                <p class="mt-2 text-gray-500">Menghubungkan ke database...</p>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -113,19 +190,23 @@
             <!-- Ringkasan Rekapitulasi -->
             <div id="rekap-summary" class="mt-8">
                 <h2 id="rekap-title" class="text-2xl font-semibold mb-4 text-gray-800">Ringkasan Rekapitulasi</h2>
-                <div id="rekap-content" class="text-gray-500 p-4 bg-gray-50 border border-dashed rounded-lg">Pilih periode (mingguan/bulanan) dan klik tombol rekap untuk melihat ringkasan.</div>
+                <div id="rekap-content" class="text-gray-500 p-4 bg-gray-50 border border-dashed rounded-lg">Pilih
+                    periode (mingguan/bulanan) dan klik tombol rekap untuk melihat ringkasan.</div>
             </div>
         </main>
     </div>
-    
+
     <!-- Modal Konfirmasi -->
-    <div id="confirmation-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50 transition-opacity duration-300">
+    <div id="confirmation-modal"
+        class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50 transition-opacity duration-300">
         <div class="bg-white p-6 rounded-lg shadow-xl w-full max-w-sm transform transition-all scale-95">
             <h3 id="modal-title" class="text-lg font-bold mb-4">Konfirmasi</h3>
             <p id="modal-message" class="text-gray-600 mb-6">Apakah Anda yakin?</p>
             <div class="flex justify-end gap-4">
-                <button id="modal-cancel" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 font-semibold">Batal</button>
-                <button id="modal-confirm" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 font-semibold">Ya</button>
+                <button id="modal-cancel"
+                    class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 font-semibold">Batal</button>
+                <button id="modal-confirm"
+                    class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 font-semibold">Ya</button>
             </div>
         </div>
     </div>
@@ -142,26 +223,34 @@
 
         // --- Variabel Global & Konfigurasi Firebase ---
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : { apiKey: "...", authDomain: "...", projectId: "...", storageBucket: "...", messagingSenderId: "...", appId: "..." };
-        
+        // INI KODE BARU DARI FIREBASE ANDA
+        const firebaseConfig = {
+            apiKey: "AIzaSyBeaaGL7wbmaa7k3cup2apImvHcT6E0yhM",
+            authDomain: "absensi-online-nagrak.firebaseapp.com",
+            projectId: "absensi-online-nagrak",
+            storageBucket: "absensi-online-nagrak.firebasestorage.app",
+            messagingSenderId: "284464759114",
+            appId: "1:284464759114:web:0f5eb44f9dc24119b001b3",
+            measurementId: "G-VZ0Q81PYQ0"
+        };
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
         let userId = null;
-        let unsubscribeAttendance = () => {}; // Fungsi untuk berhenti listen ke snapshot
+        let unsubscribeAttendance = () => { }; // Fungsi untuk berhenti listen ke snapshot
 
         // --- DATA SISWA (Struktur tidak berubah) ---
         const allStudentsData = {
-            'Kelas 7 A': [ { id: 701, name: 'Ahmad Pakih' }, { id: 702, name: 'Ai Rahmawati' }, { id: 703, name: 'Amira Aprilia Cahyani' }, { id: 704, name: 'Aufa Rizky Mahardika Hidayat' }, { id: 705, name: 'Ayuni Sri Maharani' }, { id: 706, name: 'Azka Muhamad Ripki' }, { id: 707, name: 'Dandy Alwiah Soebardja' }, { id: 708, name: 'Djibran Julian Fawaz' }, { id: 709, name: 'Fadla Nuruddin Utamima' }, { id: 710, name: 'Firendra Muhammad Najmi' }, { id: 711, name: 'Genia Nafisa Mutaqin' }, { id: 712, name: 'Hafizh Al Fakhriyudin' }, { id: 713, name: 'Ilma Hijrotul Isnaini' }, { id: 714, name: 'Indra Nur Maulidan' }, { id: 715, name: 'Jahra Sahri Salwiyah' }, { id: 716, name: 'Kaka Kurnia Sandi' }, { id: 717, name: 'Lazuardhy Fadhul Rohmatan' }, { id: 718, name: 'Lulita Aldina Distia Putri' }, { id: 719, name: 'M Dzikri Solahudin' }, { id: 720, name: 'Mirza Putri Ramadhan' }, { id: 721, name: 'Muhamad Zaelani' }, { id: 722, name: 'Muhammad Abdul Jabar' }, { id: 723, name: 'Muhammad Al-Khani Rasya' }, { id: 724, name: 'Muhammad Alzam Nurrohman' }, { id: 725, name: 'Nanda Nur Maulida' }, { id: 726, name: 'Nizam Putra Ramadhan' }, { id: 727, name: 'Qisti Fadilah Nabila' }, { id: 728, name: "Reza Rahmah Mu'arif" }, { id: 729, name: 'Safira Azkiya' }, { id: 730, name: 'Sylvia Yudhira Yunus' }, { id: 731, name: 'Tadzkirotul Mubarokah' }, { id: 732, name: 'Wafa Siti Nur Fauziah' } ],
-            'Kelas 7 B': [ { id: 751, name: 'Aisya Firda Athiyyaah' }, { id: 752, name: 'Al Munafa Afrilia Nur Aqila' }, { id: 753, name: 'Alifa Putri Ikrima' }, { id: 754, name: 'Alma Putri Ramdani' }, { id: 755, name: 'Alma Zaskia Aini' }, { id: 756, name: 'Alya Zakiya Zahra' }, { id: 757, name: 'Ceng Abdul Muzib' }, { id: 758, name: 'Cep Sidik' }, { id: 759, name: 'Diana Karin Seftyani' }, { id: 760, name: 'Farhan Qaizan Baihaqi' }, { id: 761, name: 'Firas Faiq Putra Sigit' }, { id: 762, name: 'Mirna Sri Amarsya' }, { id: 763, name: 'Moch Faisal Musyaddad' }, { id: 764, name: 'Muhamad Fauzi Syahru Sabani' }, { id: 765, name: 'Muhamad Helmi Tamim Abdulrohman' }, { id: 766, name: 'Muhammad Hafiizh Muharoom' }, { id: 767, name: 'Muhammad Luqman Maulana' }, { id: 768, name: 'Muhammad Putra Patwa Nugraha' }, { id: 769, name: 'Muhammad Rizqi Hayqal' }, { id: 770, name: 'Muhammad Sayyid Al Ayubi' }, { id: 771, name: 'Muhammad Syakir Syafaat' }, { id: 772, name: 'Muhammad Ziofar Ramdani' }, { id: 773, name: 'Nawalul Khasanah' }, { id: 774, name: 'Raihan Nur Hafidul Maqqi' }, { id: 775, name: 'Rakha Muhammad Naufal' }, { id: 776, name: 'Razka Alshaki Ekatama' }, { id: 777, name: 'Ricas Muhammad Kholil' }, { id: 778, name: 'Salwa Amaliazzahra' }, { id: 779, name: 'Salwa Khairunnisa' }, { id: 780, name: 'Shaqila Gavaputri Karim' }, { id: 781, name: 'Siti Bilqis Maulidia' }, { id: 782, name: 'Syahdan Fadilah' }, { id: 783, name: 'Yasmin Nur Dewi' }, { id: 784, name: 'Zahira Fenti Pengganis' }, { id: 785, name: 'Zahra Fitriyani' } ],
-            'Kelas 8 A': [ { id: 801, name: 'ABHINAYA BRAMANTYO' }, { id: 802, name: 'AGNIA RABBANI' }, { id: 803, name: 'AHMAD RAMDAN SOGIRIN' }, { id: 804, name: 'Arya Nur Rizwan' }, { id: 805, name: 'BUNGA ALIDIENA KHOIRUNNISA SYAKIEB' }, { id: 806, name: 'FAWWAZ ARKAN ZAID' }, { id: 807, name: 'FRICELA MARIESKA PRADIFTA' }, { id: 808, name: 'HALISA FAUJIAH' }, { id: 809, name: 'KAFFA KAEFIYATUL HUDA' }, { id: 810, name: 'M AUFHA SYAHID AL BUSYAERI' }, { id: 811, name: 'M FADZIL FIRMANSYAH' }, { id: 812, name: 'MUHAMAD IHSAN' }, { id: 813, name: 'MUHAMAD RIFKI PERDIANSYAH' }, { id: 814, name: 'MUHAMAD RIZKI PERMANA' }, { id: 815, name: 'MUHAMAD RIZQI' }, { id: 816, name: 'MUHAMMAD ADAM WILDANSAH' }, { id: 817, name: 'MUHAMMAD DIMAS HALIM' }, { id: 818, name: 'MUHAMMAD NUR HAFIDZH AKBAR R' }, { id: 819, name: "MUHAMMAD ZULFAN NUR'ALIM" }, { id: 820, name: "Naurah qurrota a'yun" }, { id: 821, name: 'Nayla Putri Ramadani' }, { id: 822, name: 'Piqih Faturahman' }, { id: 823, name: 'REISYA FAJRIN' }, { id: 824, name: 'SALSABILA AWALIYAH ZHNAS' }, { id: 825, name: 'SANI SYAFRUDDIN ALAMSYAH' }, { id: 826, name: 'SIDQIAH KHOERUN NISA' }, { id: 827, name: 'SILPA NUR APIPAH' }, { id: 828, name: 'SITI NAIFAH SALSABILA' }, { id: 829, name: 'YUNITA PURNAMA IRAWAN' }, { id: 830, name: 'ZAHRA ADILA NR' }, { id: 831, name: 'Kevin Faalih Alhuda' }, { id: 832, name: 'HABBA MAOELA' } ],
-            'Kelas 8 B': [ { id: 851, name: 'ADI DAFFA AMALUDIN' }, { id: 852, name: 'ANIS ZULFATUL HAWA' }, { id: 853, name: 'AYUNANDA MAHARANI' }, { id: 854, name: 'DALFHI AHMAD MULYADI IRAWAN' }, { id: 855, name: 'FITRI ANDINI' }, { id: 856, name: 'Ghea Nurdafila azizah' }, { id: 857, name: 'KRISNA FERDIANSYAH' }, { id: 858, name: 'Kustiar' }, { id: 859, name: 'M FARHAN KAMIL' }, { id: 860, name: 'MAULA DANI' }, { id: 861, name: 'MOHAMMAD FADLY' }, { id: 862, name: 'MUAMMAD NAUFAL ABDUL JABBAR' }, { id: 863, name: 'MUHAMAD RIZQI FATHURROHMAN' }, { id: 864, name: 'MUHAMMAD ABDUL IZAZ' }, { id: 865, name: 'MUHAMMAD ABDUL WAHID ANSHORY' }, { id: 866, name: 'MUHAMMAD FATHAN ALFARO' }, { id: 867, name: 'MUHAMMAD HILMI KHOIRUL UMAM' }, { id: 868, name: 'MUHAMMAD ZAKY SYA\'BANI' }, { id: 869, name: 'NAJMI AULIA SETIADI' }, { id: 870, name: 'NAJRIL ILHAM ALFI AL NURIANSYAH' }, { id: 871, name: 'NAYLA NUR FADILAH' }, { id: 872, name: 'NUR SAFIKA SAHARA' }, { id: 873, name: 'Safnah Nur Goromi' }, { id: 874, name: 'SINTIAWATI' }, { id: 875, name: 'SITI HAJAR CAMELLIA' }, { id: 876, name: 'VARRADISA FIKA MUHIDIN' }, { id: 877, name: 'Wawan Agustin' }, { id: 878, name: 'Zamzam Alfarizi' }, { id: 879, name: 'Madu Inayatul Hidayah' }, { id: 880, name: 'Adinda Naqiyyah Nurdalilah' } ],
-            'Kelas 9': [ { id: 901, name: 'ADITYA AZKA AZKIYYA' }, { id: 902, name: 'AFNI AFRILIA' }, { id: 903, name: 'Agniya Alfi Ikmalia' }, { id: 904, name: 'AJENG SITI AYU NURAENI' }, { id: 905, name: 'ALFADLI MAULANA HABIBLLAH' }, { id: 906, name: 'Asep Sipatul Mukavin' }, { id: 907, name: 'Azzahra Khoerunnisa' }, { id: 908, name: 'BANYU ARTHA RAMADHAN' }, { id: 909, name: 'CORRIEQONITA CORANA PONT ORAHARJO' }, { id: 910, name: 'DARDA QORI' }, { id: 911, name: 'DAVIT SAPUTRA' }, { id: 912, name: 'DZAKIYAH NISA RAFIFAH' }, { id: 913, name: 'FITRI RAMADHANI' }, { id: 914, name: 'FUTRI AULIA RAMADANI' }, { id: 915, name: 'HARRY NURFAUZI' }, { id: 916, name: 'LAELATUL MUSFIROH' }, { id: 917, name: 'M.R. RIZQI PAUZI' }, { id: 918, name: 'MUHAMAD ABIDARIN ALGHIFARI' }, { id: 919, name: 'MUHAMAD ABYYAN AL QOMAR' }, { id: 920, name: 'MUHAMAD ALFA WIDAD' }, { id: 921, name: 'MUHAMAD HISSAN SAOJANI' }, { id: 922, name: 'MUHAMAD JAKI AL-MUROBI' }, { id: 923, name: 'MUHAMAD PERMANA SIDIQ' }, { id: 924, name: 'MUHAMAD RIZKI KURNIAWAN' }, { id: 925, name: 'MUHAMAD ZAKI ABDUL MALIK' }, { id: 926, name: 'MUHAMMAD ARSAL MAULANA SIDIQ' }, { id: 927, name: 'MUHAMMAD FARIZ NASRUDIN' }, { id: 928, name: 'MUHAMMAD RAFLY NUR FADILAH' }, { id: 929, name: 'MUHAMMAD RIYADUL MUBAROK' }, { id: 930, name: 'Muhammad Syadad Ja\'far Shodiq' }, { id: 931, name: 'MUUFTI AHMAD ZAKARIYA' }, { id: 932, name: 'Putri Adhanindia' }, { id: 933, name: 'RAIHAN KHOERUL ANAM' }, { id: 934, name: 'Ramdan Maulana Arif' }, { id: 935, name: 'Rehan' }, { id: 936, name: 'RESKI DAWIL MUBAROK' }, { id: 937, name: 'SYIFA AULIA' }, { id: 938, name: 'TANIA RAHMAWATI' } ],
-            'Kelas 10 A': [ { id: 1001, name: 'Aliya Kania Putri' }, { id: 1002, name: 'Annas Asipa Qolbi' }, { id: 1003, name: 'Cantika Maharani Irawan' }, { id: 1004, name: 'Diana Nur Fadilah' }, { id: 1005, name: 'Euis Khofifah' }, { id: 1006, name: 'Gina Aprilliani' }, { id: 1007, name: 'Ikbal Hambali' }, { id: 1008, name: 'Inggita Barrah' }, { id: 1009, name: 'M Rafli Al Jabar' }, { id: 1010, name: 'M Salman Farizi Nur Kholiq' }, { id: 1011, name: 'Muhamad Ikhsan Maulana' }, { id: 1012, name: 'Mutiara Azahra' }, { id: 1013, name: 'N Arfah Awaliatul Falah' }, { id: 1014, name: 'Nyimas Ayu Fatimah Gandasari' }, { id: 1015, name: 'Putra Anjara' }, { id: 1016, name: 'Putri Rahayu' }, { id: 1017, name: 'Raisyita Dewi' }, { id: 1018, name: 'Rheina Desthian Rahman' }, { id: 1019, name: 'Sazkia Putri Amelia' }, { id: 1020, name: 'Shafa Adzakari Zahrianti' }, { id: 1021, name: 'Siti Fitriani' }, { id: 1022, name: 'Sri Rahayu' }, { id: 1023, name: 'Syahla Aulianisa' }, { id: 1024, name: 'Zahra Alfyah Putri Kasturi' } ],
-            'Kelas 10 B': [ { id: 1051, name: 'Athaya Khansa' }, { id: 1052, name: 'Aziz Muhammad Salim' }, { id: 1053, name: 'Dea Ananda' }, { id: 1054, name: 'Filzah Ramadhani' }, { id: 1055, name: 'Fitri Saskia' }, { id: 1056, name: 'Halwa Zahratu Fazisupriah' }, { id: 1057, name: 'Jilal Mukri' }, { id: 1058, name: 'Marchella Inayatul H' }, { id: 1059, name: 'Muhamad Fadhil' }, { id: 1060, name: 'Muhamad Fariz Suparta' }, { id: 1061, name: 'Muhammad Rizki Al Habsi' }, { id: 1062, name: 'Rafi Ramdani' }, { id: 1063, name: 'Raisya Nurasyifa' }, { id: 1064, name: 'Revina Tridiyas Purgani' }, { id: 1065, name: 'Ridho Musbahhudin Parhan' }, { id: 1066, name: 'Rizka Nia Nopianti' }, { id: 1067, name: 'Rizqi Ahmad Syaharudin' }, { id: 1068, name: 'Sahrul Muslih Al Mubarok' }, { id: 1069, name: 'Siska Amelia' }, { id: 1070, name: 'Siti Fatimah' }, { id: 1071, name: 'Suci Halimatu Sa\'Adah' }, { id: 1072, name: 'Sukron Ramadhan' }, { id: 1073, name: 'Yaspi Nurohmah' } ],
-            'Kelas 11 A': [ { id: 1101, name: 'ADZKIYA AULIA KHOERUN NISA' }, { id: 1102, name: 'AHMAD SIROJUDDIN A\'RIFIN' }, { id: 1103, name: 'Alif Khoir Ar-Rahman' }, { id: 1104, name: 'Basilia Marabel Ophelia' }, { id: 1105, name: 'DEWI SINTA' }, { id: 1106, name: 'DIMAZ KURNIAWAN' }, { id: 1107, name: 'Farhan Guvroni' }, { id: 1108, name: 'GALIH SAEPUDIN' }, { id: 1109, name: 'HILMA HALIMATUSYA\'DIAH' }, { id: 1110, name: 'IRMA MARYANI' }, { id: 1111, name: 'Jepshica Haifa Azmeria' }, { id: 1112, name: 'KENT AHKAM WIRA PUTRA' }, { id: 1113, name: 'LUTVIAH SITI NUROHMAH' }, { id: 1114, name: 'M. Marik Setiawan' }, { id: 1115, name: 'MA\'WA SHULHATUL FIKRIYYAH' }, { id: 1116, name: 'Mardiana Gipari' }, { id: 1117, name: 'MUHAMMAD AHSAN TAJUDIN MUZAKI' }, { id: 1118, name: 'Muhammad Faisal Arfan' }, { id: 1119, name: 'Muhammad Muna Abdul Manan' }, { id: 1120, name: 'MUHAMMAD SYAMIL MUFIID' }, { id: 1121, name: 'PAISAL AHMAD' }, { id: 1122, name: 'RAHMA AYU RESTARI' }, { id: 1123, name: 'Rangga Putra Selandri' }, { id: 1124, name: 'RISMA MELANI' }, { id: 1125, name: 'Sadad Ali Abdurrohman' }, { id: 1126, name: 'SITI MUTHOLIBATUS SAADAH' }, { id: 1127, name: 'SYIFA SITI NUR ANGRAENI' }, { id: 1128, name: 'Yuli Lestari' } ],
-            'Kelas 11 B': [ { id: 1151, name: 'ALHAFIZD AZKIA' }, { id: 1152, name: 'ANDRA RAMDANI' }, { id: 1153, name: 'Arina Salsabila Ramadhani' }, { id: 1154, name: 'Asna Khosyyatillah' }, { id: 1155, name: 'CINDY AMELIA R' }, { id: 1156, name: 'Dinda Karunia Ramadhina' }, { id: 1157, name: 'DIZKRI MUHAMMAD RIZKY' }, { id: 1158, name: 'FAWAZ ALIP MUHAROM' }, { id: 1159, name: 'IHSAN PRATAMA HIBATULLOH' }, { id: 1160, name: 'Irfaliza Diara' }, { id: 1161, name: 'ISMI NURFADILAH' }, { id: 1162, name: 'Luthfi Syafiik Mubarrik' }, { id: 1163, name: 'MARWA SITI MUT\'MAINAH' }, { id: 1164, name: 'MUHAMAD AJKA AMBIA' }, { id: 1165, name: 'MUHAMMAD ADI SAPUTRA' }, { id: 1166, name: 'MUHAMMAD DIKA NUGRAHA' }, { id: 1167, name: 'MUHAMMAD HIKAM ABDUSSALAM' }, { id: 1168, name: 'MUHAMMAD RIDHWAN' }, { id: 1169, name: 'NABIL MAFTUH FADHLURROHMAN' }, { id: 1170, name: 'NAURA IFATUZAHRA' }, { id: 1171, name: 'RAFKA MIFTAHUL FARID' }, { id: 1172, name: 'REYHAN PRAMA ARDHIANSYAH' }, { id: 1173, name: 'REZA AYU WANDIRA' }, { id: 1174, name: 'Rizka Haibatur Rif\'ah' }, { id: 1175, name: 'SALWA FATIMAH AZ ZAHRA' }, { id: 1176, name: 'Siti Azzahra Yusuf' }, { id: 1177, name: 'SITI NURHASANAH' }, { id: 1178, name: 'TSABITA SHOFNI AQEELAH' } ],
-            'Kelas 12': [ { id: 1201, name: 'Abdul Rosyid' }, { id: 1202, name: 'Al Maira Nur Safina' }, { id: 1203, name: 'Aqso Abdan Syaquro' }, { id: 1204, name: 'Asep Setiawan Prasetio' }, { id: 1205, name: 'Bilqis Al Adawiyah' }, { id: 1206, name: 'Dalfa Nur Aziziyah' }, { id: 1207, name: 'Dini Dwi Melani' }, { id: 1208, name: 'Habib Abdurohman' }, { id: 1209, name: 'Idris Jalaludin Malik' }, { id: 1210, name: 'Isni Maulidah' }, { id: 1211, name: 'Krisna Alfa Raza' }, { id: 1212, name: 'M Abdul Kohar Fauzan' }, { id: 1213, name: 'Meyla Siti Nurwahidah' }, { id: 1214, name: 'Moh Hasyim As\'ari' }, { id: 1215, name: 'Muhamad Alfi Husnuloh' }, { id: 1216, name: 'Muhammad Abdul Aziz' }, { id: 1217, name: 'Muhammad Afriza' }, { id: 1218, name: 'Mutiara Anjani' }, { id: 1219, name: 'Nazma Khofifah' }, { id: 20, name: 'Parhan Mauludin' }, { id: 1221, name: 'Pepi Apipah' }, { id: 1222, name: 'Ressa Ardianti Agustin' }, { id: 1223, name: 'Ridwan Anugrah Saputra' }, { id: 1224, name: 'Silvi Nurul Wasilah' }, { id: 1225, name: 'Siti Ayuni' }, { id: 1226, name: 'Siti Hafsoh Maulida' }, { id: 1227, name: 'Tsaqif Zulfian Raja' }, { id: 1228, name: 'Wulandari' } ]
+            'Kelas 7 A': [{ id: 701, name: 'Ahmad Pakih' }, { id: 702, name: 'Ai Rahmawati' }, { id: 703, name: 'Amira Aprilia Cahyani' }, { id: 704, name: 'Aufa Rizky Mahardika Hidayat' }, { id: 705, name: 'Ayuni Sri Maharani' }, { id: 706, name: 'Azka Muhamad Ripki' }, { id: 707, name: 'Dandy Alwiah Soebardja' }, { id: 708, name: 'Djibran Julian Fawaz' }, { id: 709, name: 'Fadla Nuruddin Utamima' }, { id: 710, name: 'Firendra Muhammad Najmi' }, { id: 711, name: 'Genia Nafisa Mutaqin' }, { id: 712, name: 'Hafizh Al Fakhriyudin' }, { id: 713, name: 'Ilma Hijrotul Isnaini' }, { id: 714, name: 'Indra Nur Maulidan' }, { id: 715, name: 'Jahra Sahri Salwiyah' }, { id: 716, name: 'Kaka Kurnia Sandi' }, { id: 717, name: 'Lazuardhy Fadhul Rohmatan' }, { id: 718, name: 'Lulita Aldina Distia Putri' }, { id: 719, name: 'M Dzikri Solahudin' }, { id: 720, name: 'Mirza Putri Ramadhan' }, { id: 721, name: 'Muhamad Zaelani' }, { id: 722, name: 'Muhammad Abdul Jabar' }, { id: 723, name: 'Muhammad Al-Khani Rasya' }, { id: 724, name: 'Muhammad Alzam Nurrohman' }, { id: 725, name: 'Nanda Nur Maulida' }, { id: 726, name: 'Nizam Putra Ramadhan' }, { id: 727, name: 'Qisti Fadilah Nabila' }, { id: 728, name: "Reza Rahmah Mu'arif" }, { id: 729, name: 'Safira Azkiya' }, { id: 730, name: 'Sylvia Yudhira Yunus' }, { id: 731, name: 'Tadzkirotul Mubarokah' }, { id: 732, name: 'Wafa Siti Nur Fauziah' }],
+            'Kelas 7 B': [{ id: 751, name: 'Aisya Firda Athiyyaah' }, { id: 752, name: 'Al Munafa Afrilia Nur Aqila' }, { id: 753, name: 'Alifa Putri Ikrima' }, { id: 754, name: 'Alma Putri Ramdani' }, { id: 755, name: 'Alma Zaskia Aini' }, { id: 756, name: 'Alya Zakiya Zahra' }, { id: 757, name: 'Ceng Abdul Muzib' }, { id: 758, name: 'Cep Sidik' }, { id: 759, name: 'Diana Karin Seftyani' }, { id: 760, name: 'Farhan Qaizan Baihaqi' }, { id: 761, name: 'Firas Faiq Putra Sigit' }, { id: 762, name: 'Mirna Sri Amarsya' }, { id: 763, name: 'Moch Faisal Musyaddad' }, { id: 764, name: 'Muhamad Fauzi Syahru Sabani' }, { id: 765, name: 'Muhamad Helmi Tamim Abdulrohman' }, { id: 766, name: 'Muhammad Hafiizh Muharoom' }, { id: 767, name: 'Muhammad Luqman Maulana' }, { id: 768, name: 'Muhammad Putra Patwa Nugraha' }, { id: 769, name: 'Muhammad Rizqi Hayqal' }, { id: 770, name: 'Muhammad Sayyid Al Ayubi' }, { id: 771, name: 'Muhammad Syakir Syafaat' }, { id: 772, name: 'Muhammad Ziofar Ramdani' }, { id: 773, name: 'Nawalul Khasanah' }, { id: 774, name: 'Raihan Nur Hafidul Maqqi' }, { id: 775, name: 'Rakha Muhammad Naufal' }, { id: 776, name: 'Razka Alshaki Ekatama' }, { id: 777, name: 'Ricas Muhammad Kholil' }, { id: 778, name: 'Salwa Amaliazzahra' }, { id: 779, name: 'Salwa Khairunnisa' }, { id: 780, name: 'Shaqila Gavaputri Karim' }, { id: 781, name: 'Siti Bilqis Maulidia' }, { id: 782, name: 'Syahdan Fadilah' }, { id: 783, name: 'Yasmin Nur Dewi' }, { id: 784, name: 'Zahira Fenti Pengganis' }, { id: 785, name: 'Zahra Fitriyani' }],
+            'Kelas 8 A': [{ id: 801, name: 'ABHINAYA BRAMANTYO' }, { id: 802, name: 'AGNIA RABBANI' }, { id: 803, name: 'AHMAD RAMDAN SOGIRIN' }, { id: 804, name: 'Arya Nur Rizwan' }, { id: 805, name: 'BUNGA ALIDIENA KHOIRUNNISA SYAKIEB' }, { id: 806, name: 'FAWWAZ ARKAN ZAID' }, { id: 807, name: 'FRICELA MARIESKA PRADIFTA' }, { id: 808, name: 'HALISA FAUJIAH' }, { id: 809, name: 'KAFFA KAEFIYATUL HUDA' }, { id: 810, name: 'M AUFHA SYAHID AL BUSYAERI' }, { id: 811, name: 'M FADZIL FIRMANSYAH' }, { id: 812, name: 'MUHAMAD IHSAN' }, { id: 813, name: 'MUHAMAD RIFKI PERDIANSYAH' }, { id: 814, name: 'MUHAMAD RIZKI PERMANA' }, { id: 815, name: 'MUHAMAD RIZQI' }, { id: 816, name: 'MUHAMMAD ADAM WILDANSAH' }, { id: 817, name: 'MUHAMMAD DIMAS HALIM' }, { id: 818, name: 'MUHAMMAD NUR HAFIDZH AKBAR R' }, { id: 819, name: "MUHAMMAD ZULFAN NUR'ALIM" }, { id: 820, name: "Naurah qurrota a'yun" }, { id: 821, name: 'Nayla Putri Ramadani' }, { id: 822, name: 'Piqih Faturahman' }, { id: 823, name: 'REISYA FAJRIN' }, { id: 824, name: 'SALSABILA AWALIYAH ZHNAS' }, { id: 825, name: 'SANI SYAFRUDDIN ALAMSYAH' }, { id: 826, name: 'SIDQIAH KHOERUN NISA' }, { id: 827, name: 'SILPA NUR APIPAH' }, { id: 828, name: 'SITI NAIFAH SALSABILA' }, { id: 829, name: 'YUNITA PURNAMA IRAWAN' }, { id: 830, name: 'ZAHRA ADILA NR' }, { id: 831, name: 'Kevin Faalih Alhuda' }, { id: 832, name: 'HABBA MAOELA' }],
+            'Kelas 8 B': [{ id: 851, name: 'ADI DAFFA AMALUDIN' }, { id: 852, name: 'ANIS ZULFATUL HAWA' }, { id: 853, name: 'AYUNANDA MAHARANI' }, { id: 854, name: 'DALFHI AHMAD MULYADI IRAWAN' }, { id: 855, name: 'FITRI ANDINI' }, { id: 856, name: 'Ghea Nurdafila azizah' }, { id: 857, name: 'KRISNA FERDIANSYAH' }, { id: 858, name: 'Kustiar' }, { id: 859, name: 'M FARHAN KAMIL' }, { id: 860, name: 'MAULA DANI' }, { id: 861, name: 'MOHAMMAD FADLY' }, { id: 862, name: 'MUAMMAD NAUFAL ABDUL JABBAR' }, { id: 863, name: 'MUHAMAD RIZQI FATHURROHMAN' }, { id: 864, name: 'MUHAMMAD ABDUL IZAZ' }, { id: 865, name: 'MUHAMMAD ABDUL WAHID ANSHORY' }, { id: 866, name: 'MUHAMMAD FATHAN ALFARO' }, { id: 867, name: 'MUHAMMAD HILMI KHOIRUL UMAM' }, { id: 868, name: 'MUHAMMAD ZAKY SYA\'BANI' }, { id: 869, name: 'NAJMI AULIA SETIADI' }, { id: 870, name: 'NAJRIL ILHAM ALFI AL NURIANSYAH' }, { id: 871, name: 'NAYLA NUR FADILAH' }, { id: 872, name: 'NUR SAFIKA SAHARA' }, { id: 873, name: 'Safnah Nur Goromi' }, { id: 874, name: 'SINTIAWATI' }, { id: 875, name: 'SITI HAJAR CAMELLIA' }, { id: 876, name: 'VARRADISA FIKA MUHIDIN' }, { id: 877, name: 'Wawan Agustin' }, { id: 878, name: 'Zamzam Alfarizi' }, { id: 879, name: 'Madu Inayatul Hidayah' }, { id: 880, name: 'Adinda Naqiyyah Nurdalilah' }],
+            'Kelas 9': [{ id: 901, name: 'ADITYA AZKA AZKIYYA' }, { id: 902, name: 'AFNI AFRILIA' }, { id: 903, name: 'Agniya Alfi Ikmalia' }, { id: 904, name: 'AJENG SITI AYU NURAENI' }, { id: 905, name: 'ALFADLI MAULANA HABIBLLAH' }, { id: 906, name: 'Asep Sipatul Mukavin' }, { id: 907, name: 'Azzahra Khoerunnisa' }, { id: 908, name: 'BANYU ARTHA RAMADHAN' }, { id: 909, name: 'CORRIEQONITA CORANA PONT ORAHARJO' }, { id: 910, name: 'DARDA QORI' }, { id: 911, name: 'DAVIT SAPUTRA' }, { id: 912, name: 'DZAKIYAH NISA RAFIFAH' }, { id: 913, name: 'FITRI RAMADHANI' }, { id: 914, name: 'FUTRI AULIA RAMADANI' }, { id: 915, name: 'HARRY NURFAUZI' }, { id: 916, name: 'LAELATUL MUSFIROH' }, { id: 917, name: 'M.R. RIZQI PAUZI' }, { id: 918, name: 'MUHAMAD ABIDARIN ALGHIFARI' }, { id: 919, name: 'MUHAMAD ABYYAN AL QOMAR' }, { id: 920, name: 'MUHAMAD ALFA WIDAD' }, { id: 921, name: 'MUHAMAD HISSAN SAOJANI' }, { id: 922, name: 'MUHAMAD JAKI AL-MUROBI' }, { id: 923, name: 'MUHAMAD PERMANA SIDIQ' }, { id: 924, name: 'MUHAMAD RIZKI KURNIAWAN' }, { id: 925, name: 'MUHAMAD ZAKI ABDUL MALIK' }, { id: 926, name: 'MUHAMMAD ARSAL MAULANA SIDIQ' }, { id: 927, name: 'MUHAMMAD FARIZ NASRUDIN' }, { id: 928, name: 'MUHAMMAD RAFLY NUR FADILAH' }, { id: 929, name: 'MUHAMMAD RIYADUL MUBAROK' }, { id: 930, name: 'Muhammad Syadad Ja\'far Shodiq' }, { id: 931, name: 'MUUFTI AHMAD ZAKARIYA' }, { id: 932, name: 'Putri Adhanindia' }, { id: 933, name: 'RAIHAN KHOERUL ANAM' }, { id: 934, name: 'Ramdan Maulana Arif' }, { id: 935, name: 'Rehan' }, { id: 936, name: 'RESKI DAWIL MUBAROK' }, { id: 937, name: 'SYIFA AULIA' }, { id: 938, name: 'TANIA RAHMAWATI' }],
+            'Kelas 10 A': [{ id: 1001, name: 'Aliya Kania Putri' }, { id: 1002, name: 'Annas Asipa Qolbi' }, { id: 1003, name: 'Cantika Maharani Irawan' }, { id: 1004, name: 'Diana Nur Fadilah' }, { id: 1005, name: 'Euis Khofifah' }, { id: 1006, name: 'Gina Aprilliani' }, { id: 1007, name: 'Ikbal Hambali' }, { id: 1008, name: 'Inggita Barrah' }, { id: 1009, name: 'M Rafli Al Jabar' }, { id: 1010, name: 'M Salman Farizi Nur Kholiq' }, { id: 1011, name: 'Muhamad Ikhsan Maulana' }, { id: 1012, name: 'Mutiara Azahra' }, { id: 1013, name: 'N Arfah Awaliatul Falah' }, { id: 1014, name: 'Nyimas Ayu Fatimah Gandasari' }, { id: 1015, name: 'Putra Anjara' }, { id: 1016, name: 'Putri Rahayu' }, { id: 1017, name: 'Raisyita Dewi' }, { id: 1018, name: 'Rheina Desthian Rahman' }, { id: 1019, name: 'Sazkia Putri Amelia' }, { id: 1020, name: 'Shafa Adzakari Zahrianti' }, { id: 1021, name: 'Siti Fitriani' }, { id: 1022, name: 'Sri Rahayu' }, { id: 1023, name: 'Syahla Aulianisa' }, { id: 1024, name: 'Zahra Alfyah Putri Kasturi' }],
+            'Kelas 10 B': [{ id: 1051, name: 'Athaya Khansa' }, { id: 1052, name: 'Aziz Muhammad Salim' }, { id: 1053, name: 'Dea Ananda' }, { id: 1054, name: 'Filzah Ramadhani' }, { id: 1055, name: 'Fitri Saskia' }, { id: 1056, name: 'Halwa Zahratu Fazisupriah' }, { id: 1057, name: 'Jilal Mukri' }, { id: 1058, name: 'Marchella Inayatul H' }, { id: 1059, name: 'Muhamad Fadhil' }, { id: 1060, name: 'Muhamad Fariz Suparta' }, { id: 1061, name: 'Muhammad Rizki Al Habsi' }, { id: 1062, name: 'Rafi Ramdani' }, { id: 1063, name: 'Raisya Nurasyifa' }, { id: 1064, name: 'Revina Tridiyas Purgani' }, { id: 1065, name: 'Ridho Musbahhudin Parhan' }, { id: 1066, name: 'Rizka Nia Nopianti' }, { id: 1067, name: 'Rizqi Ahmad Syaharudin' }, { id: 1068, name: 'Sahrul Muslih Al Mubarok' }, { id: 1069, name: 'Siska Amelia' }, { id: 1070, name: 'Siti Fatimah' }, { id: 1071, name: 'Suci Halimatu Sa\'Adah' }, { id: 1072, name: 'Sukron Ramadhan' }, { id: 1073, name: 'Yaspi Nurohmah' }],
+            'Kelas 11 A': [{ id: 1101, name: 'ADZKIYA AULIA KHOERUN NISA' }, { id: 1102, name: 'AHMAD SIROJUDDIN A\'RIFIN' }, { id: 1103, name: 'Alif Khoir Ar-Rahman' }, { id: 1104, name: 'Basilia Marabel Ophelia' }, { id: 1105, name: 'DEWI SINTA' }, { id: 1106, name: 'DIMAZ KURNIAWAN' }, { id: 1107, name: 'Farhan Guvroni' }, { id: 1108, name: 'GALIH SAEPUDIN' }, { id: 1109, name: 'HILMA HALIMATUSYA\'DIAH' }, { id: 1110, name: 'IRMA MARYANI' }, { id: 1111, name: 'Jepshica Haifa Azmeria' }, { id: 1112, name: 'KENT AHKAM WIRA PUTRA' }, { id: 1113, name: 'LUTVIAH SITI NUROHMAH' }, { id: 1114, name: 'M. Marik Setiawan' }, { id: 1115, name: 'MA\'WA SHULHATUL FIKRIYYAH' }, { id: 1116, name: 'Mardiana Gipari' }, { id: 1117, name: 'MUHAMMAD AHSAN TAJUDIN MUZAKI' }, { id: 1118, name: 'Muhammad Faisal Arfan' }, { id: 1119, name: 'Muhammad Muna Abdul Manan' }, { id: 1120, name: 'MUHAMMAD SYAMIL MUFIID' }, { id: 1121, name: 'PAISAL AHMAD' }, { id: 1122, name: 'RAHMA AYU RESTARI' }, { id: 1123, name: 'Rangga Putra Selandri' }, { id: 1124, name: 'RISMA MELANI' }, { id: 1125, name: 'Sadad Ali Abdurrohman' }, { id: 1126, name: 'SITI MUTHOLIBATUS SAADAH' }, { id: 1127, name: 'SYIFA SITI NUR ANGRAENI' }, { id: 1128, name: 'Yuli Lestari' }],
+            'Kelas 11 B': [{ id: 1151, name: 'ALHAFIZD AZKIA' }, { id: 1152, name: 'ANDRA RAMDANI' }, { id: 1153, name: 'Arina Salsabila Ramadhani' }, { id: 1154, name: 'Asna Khosyyatillah' }, { id: 1155, name: 'CINDY AMELIA R' }, { id: 1156, name: 'Dinda Karunia Ramadhina' }, { id: 1157, name: 'DIZKRI MUHAMMAD RIZKY' }, { id: 1158, name: 'FAWAZ ALIP MUHAROM' }, { id: 1159, name: 'IHSAN PRATAMA HIBATULLOH' }, { id: 1160, name: 'Irfaliza Diara' }, { id: 1161, name: 'ISMI NURFADILAH' }, { id: 1162, name: 'Luthfi Syafiik Mubarrik' }, { id: 1163, name: 'MARWA SITI MUT\'MAINAH' }, { id: 1164, name: 'MUHAMAD AJKA AMBIA' }, { id: 1165, name: 'MUHAMMAD ADI SAPUTRA' }, { id: 1166, name: 'MUHAMMAD DIKA NUGRAHA' }, { id: 1167, name: 'MUHAMMAD HIKAM ABDUSSALAM' }, { id: 1168, name: 'MUHAMMAD RIDHWAN' }, { id: 1169, name: 'NABIL MAFTUH FADHLURROHMAN' }, { id: 1170, name: 'NAURA IFATUZAHRA' }, { id: 1171, name: 'RAFKA MIFTAHUL FARID' }, { id: 1172, name: 'REYHAN PRAMA ARDHIANSYAH' }, { id: 1173, name: 'REZA AYU WANDIRA' }, { id: 1174, name: 'Rizka Haibatur Rif\'ah' }, { id: 1175, name: 'SALWA FATIMAH AZ ZAHRA' }, { id: 1176, name: 'Siti Azzahra Yusuf' }, { id: 1177, name: 'SITI NURHASANAH' }, { id: 1178, name: 'TSABITA SHOFNI AQEELAH' }],
+            'Kelas 12': [{ id: 1201, name: 'Abdul Rosyid' }, { id: 1202, name: 'Al Maira Nur Safina' }, { id: 1203, name: 'Aqso Abdan Syaquro' }, { id: 1204, name: 'Asep Setiawan Prasetio' }, { id: 1205, name: 'Bilqis Al Adawiyah' }, { id: 1206, name: 'Dalfa Nur Aziziyah' }, { id: 1207, name: 'Dini Dwi Melani' }, { id: 1208, name: 'Habib Abdurohman' }, { id: 1209, name: 'Idris Jalaludin Malik' }, { id: 1210, name: 'Isni Maulidah' }, { id: 1211, name: 'Krisna Alfa Raza' }, { id: 1212, name: 'M Abdul Kohar Fauzan' }, { id: 1213, name: 'Meyla Siti Nurwahidah' }, { id: 1214, name: 'Moh Hasyim As\'ari' }, { id: 1215, name: 'Muhamad Alfi Husnuloh' }, { id: 1216, name: 'Muhammad Abdul Aziz' }, { id: 1217, name: 'Muhammad Afriza' }, { id: 1218, name: 'Mutiara Anjani' }, { id: 1219, name: 'Nazma Khofifah' }, { id: 20, name: 'Parhan Mauludin' }, { id: 1221, name: 'Pepi Apipah' }, { id: 1222, name: 'Ressa Ardianti Agustin' }, { id: 1223, name: 'Ridwan Anugrah Saputra' }, { id: 1224, name: 'Silvi Nurul Wasilah' }, { id: 1225, name: 'Siti Ayuni' }, { id: 1226, name: 'Siti Hafsoh Maulida' }, { id: 1227, name: 'Tsaqif Zulfian Raja' }, { id: 1228, name: 'Wulandari' }]
         };
         for (const className in allStudentsData) {
             allStudentsData[className].forEach(student => { student.isLocked = true; });
@@ -191,7 +280,7 @@
         const lockNaikKelasBtn = document.getElementById('lock-naik-kelas-btn');
         const lockIcon = document.getElementById('lock-icon');
         const userInfo = document.getElementById('user-info');
-        
+
         let currentClass = Object.keys(allStudentsData)[0];
         let studentIdToDelete = null;
         let isNaikKelasLocked = true;
@@ -200,7 +289,7 @@
         function getTahunPelajaran() {
             const now = new Date();
             const year = now.getFullYear();
-            const month = now.getMonth(); 
+            const month = now.getMonth();
             return month >= 6 ? `${year}/${year + 1}` : `${year - 1}/${year}`;
         }
 
@@ -214,7 +303,7 @@
             const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
             currentDateElem.textContent = now.toLocaleDateString('id-ID', options);
         }
-        
+
         function populateDateSelectors() {
             const now = new Date();
             const currentYear = now.getFullYear();
@@ -257,7 +346,7 @@
                 }
             }
         }
-        
+
         function populateWeekSelector() {
             weekSelector.innerHTML = '';
             const year = parseInt(yearSelector.value);
@@ -277,13 +366,13 @@
                     while (new Date(year, month, actualStart).getDay() % 6 === 0) {
                         actualStart++;
                     }
-                    if(actualStart > day) continue; // Skip jika minggu ini hanya berisi weekend
+                    if (actualStart > day) continue; // Skip jika minggu ini hanya berisi weekend
 
                     const option = document.createElement('option');
                     option.value = `${actualStart}-${day}`;
                     option.textContent = `Minggu ${weekCount} (Tgl ${actualStart} - ${day})`;
                     weekSelector.appendChild(option);
-                    
+
                     weekCount++;
                     currentWeekStart = day + 1;
                 }
@@ -305,7 +394,7 @@
             select.className = "w-16 p-1 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 text-xs";
             select.setAttribute('data-student-id', studentId);
             select.setAttribute('data-hour', hour);
-            const options = [ { value: '', text: '-' }, { value: 'SK', text: 'SK' }, { value: 'SP', text: 'SP' }, { value: 'I', text: 'I' }, { value: 'A', text: 'A' } ];
+            const options = [{ value: '', text: '-' }, { value: 'SK', text: 'SK' }, { value: 'SP', text: 'SP' }, { value: 'I', text: 'I' }, { value: 'A', text: 'A' }];
             options.forEach(opt => {
                 const option = document.createElement('option');
                 option.value = opt.value;
@@ -325,13 +414,13 @@
                     <th scope="col" rowspan="2" class="px-6 py-3 border border-gray-300 text-center align-middle w-56">Rekapitulasi Bulanan</th>
                 </tr>
                 <tr>
-                    ${Array.from({length: 8}, (_, i) => `<th scope="col" class="px-2 py-3 border border-gray-300 text-center font-normal">${i+1}</th>`).join('')}
+                    ${Array.from({ length: 8 }, (_, i) => `<th scope="col" class="px-2 py-3 border border-gray-300 text-center font-normal">${i + 1}</th>`).join('')}
                 </tr>`;
             attendanceBody.innerHTML = '';
             const students = allStudentsData[currentClass] || [];
             if (students.length === 0) {
-                 attendanceBody.innerHTML = `<tr><td colspan="12" class="text-center py-10 text-gray-500">Belum ada data siswa di kelas ini.</td></tr>`;
-                 return;
+                attendanceBody.innerHTML = `<tr><td colspan="12" class="text-center py-10 text-gray-500">Belum ada data siswa di kelas ini.</td></tr>`;
+                return;
             }
             students.forEach(student => {
                 const row = document.createElement('tr');
@@ -377,8 +466,8 @@
             });
             listenToAttendanceChanges();
         }
-        
-        window.tambahSiswa = function() {
+
+        window.tambahSiswa = function () {
             const newName = tambahSiswaInput.value.trim();
             if (newName) {
                 const studentsInClass = allStudentsData[currentClass];
@@ -390,7 +479,7 @@
                 alert('Nama siswa tidak boleh kosong!');
             }
         }
-        
+
         async function getAndProcessRecapData(q) {
             const querySnapshot = await getDocs(q);
             const recapData = {};
@@ -416,62 +505,62 @@
                     <span class="inline-block bg-amber-100 text-amber-800 text-xs font-semibold mr-2 px-2-5 py-0-5 rounded-full">SP: ${counts.SP}</span>
                     <span class="inline-block bg-emerald-100 text-emerald-800 text-xs font-semibold mr-2 px-2-5 py-0-5 rounded-full">I: ${counts.I}</span>
                     <span class="inline-block bg-rose-100 text-rose-800 text-xs font-semibold px-2-5 py-0-5 rounded-full">A: ${counts.A}</span>`;
-                
+
                 const rekapCell = document.getElementById(`rekap-${student.id}`);
-                if(rekapCell && rekapTitle.textContent.includes('Bulanan')) rekapCell.innerHTML = rekapText;
+                if (rekapCell && rekapTitle.textContent.includes('Bulanan')) rekapCell.innerHTML = rekapText;
                 summaryHTML += `<div class="bg-white p-4 rounded-lg border shadow-sm"><p class="font-semibold text-gray-800">${student.name}</p><p class="text-xs font-mono mt-2">${rekapText}</p></div>`;
             });
             summaryHTML += '</div>';
             rekapContent.innerHTML = summaryHTML;
         }
 
-        window.hitungRekapMingguan = async function() {
+        window.hitungRekapMingguan = async function () {
             const students = allStudentsData[currentClass] || [];
             if (students.length === 0 || !weekSelector.value) {
                 rekapContent.innerHTML = 'Pilih kelas dan minggu terlebih dahulu.';
                 return;
             }
             rekapContent.innerHTML = '<div id="loader" class="mx-auto"></div><p class="mt-2 text-gray-500 text-center">Menghitung rekapitulasi mingguan...</p>';
-            
+
             const year = parseInt(yearSelector.value);
             const month = parseInt(monthSelector.value);
             const [startDay, endDay] = weekSelector.value.split('-').map(Number);
             rekapTitle.textContent = `Ringkasan Rekapitulasi Mingguan (Tgl ${startDay}-${endDay})`;
 
             const attendanceRef = collection(db, `/artifacts/${appId}/public/data/attendance`);
-            const q = query(attendanceRef, 
-                where("year", "==", year), 
-                where("month", "==", month), 
+            const q = query(attendanceRef,
+                where("year", "==", year),
+                where("month", "==", month),
                 where("class", "==", currentClass),
                 where("day", ">=", startDay),
                 where("day", "<=", endDay)
             );
-            
+
             const recapData = await getAndProcessRecapData(q);
             displayRecap(recapData);
         }
 
-        window.hitungRekapBulanan = async function() {
+        window.hitungRekapBulanan = async function () {
             const students = allStudentsData[currentClass] || [];
             if (students.length === 0) {
                 rekapContent.innerHTML = 'Tidak ada siswa untuk direkap.';
                 return;
             }
             rekapContent.innerHTML = '<div id="loader" class="mx-auto"></div><p class="mt-2 text-gray-500 text-center">Menghitung rekapitulasi bulanan...</p>';
-            
+
             const year = parseInt(yearSelector.value);
             const month = parseInt(monthSelector.value);
             const monthName = monthSelector.options[monthSelector.selectedIndex].text;
             rekapTitle.textContent = `Ringkasan Rekapitulasi Bulanan (${monthName} ${year})`;
-            
+
             const attendanceRef = collection(db, `/artifacts/${appId}/public/data/attendance`);
             const q = query(attendanceRef, where("year", "==", year), where("month", "==", month), where("class", "==", currentClass));
-            
+
             const recapData = await getAndProcessRecapData(q);
             displayRecap(recapData);
         }
 
-        window.exportToCSV = async function() {
+        window.exportToCSV = async function () {
             const students = allStudentsData[currentClass] || [];
             if (students.length === 0) {
                 alert('Tidak ada data siswa untuk diekspor.');
@@ -481,7 +570,7 @@
             const year = parseInt(yearSelector.value);
             const month = parseInt(monthSelector.value);
             const monthName = monthSelector.options[monthSelector.selectedIndex].text;
-            
+
             alert(`Mempersiapkan ekspor untuk ${currentClass} bulan ${monthName} ${year}...`);
 
             const attendanceRef = collection(db, `/artifacts/${appId}/public/data/attendance`);
@@ -523,7 +612,7 @@
         }
 
         // --- Fungsi Modal & Aksi ---
-        window.showConfirmation = function(type, id = null, name = null) {
+        window.showConfirmation = function (type, id = null, name = null) {
             confirmationModal.classList.remove('hidden');
             confirmationModal.querySelector('div').classList.remove('scale-95');
             modalConfirmBtn.onclick = null;
@@ -542,7 +631,7 @@
                 modalConfirmBtn.onclick = () => prosesKenaikanKelas();
             }
         }
-        
+
         function hideConfirmation() {
             confirmationModal.querySelector('div').classList.add('scale-95');
             confirmationModal.classList.add('hidden');
@@ -555,7 +644,7 @@
             const batch = writeBatch(db);
             const attendanceRef = collection(db, `/artifacts/${appId}/public/data/attendance`);
             const q = query(attendanceRef, where("year", "==", year), where("month", "==", month), where("day", "==", day), where("class", "==", currentClass));
-            
+
             const querySnapshot = await getDocs(q);
             querySnapshot.forEach(doc => {
                 batch.delete(doc.ref);
@@ -564,10 +653,10 @@
             hideConfirmation();
         }
 
-        window.toggleLock = function(studentId) {
+        window.toggleLock = function (studentId) {
             const student = allStudentsData[currentClass].find(s => s.id === studentId);
             if (student) {
-                student.isLocked = !student.isLocked; 
+                student.isLocked = !student.isLocked;
                 renderTable();
             }
         }
@@ -582,7 +671,7 @@
             hideConfirmation();
         }
 
-        window.updateNaikKelasButtonState = function() {
+        window.updateNaikKelasButtonState = function () {
             naikKelasBtn.disabled = isNaikKelasLocked;
             naikKelasBtn.classList.toggle('bg-gray-400', isNaikKelasLocked);
             naikKelasBtn.classList.toggle('cursor-not-allowed', isNaikKelasLocked);
@@ -594,7 +683,7 @@
             lockNaikKelasBtn.classList.toggle('bg-yellow-400', isNaikKelasLocked);
         }
 
-        window.toggleNaikKelasLock = function() {
+        window.toggleNaikKelasLock = function () {
             isNaikKelasLocked = !isNaikKelasLocked;
             updateNaikKelasButtonState();
         }
@@ -617,7 +706,7 @@
             updateNaikKelasButtonState();
             renderTable();
         }
-        
+
         // --- Fungsi Penyimpanan Data (Firestore) ---
         async function saveAttendance(studentId, hour, value) {
             if (!userId) return;
@@ -646,10 +735,10 @@
             const year = parseInt(yearSelector.value);
             const month = parseInt(monthSelector.value);
             const day = parseInt(daySelector.value);
-            
+
             const attendanceRef = collection(db, `/artifacts/${appId}/public/data/attendance`);
             const q = query(attendanceRef, where("year", "==", year), where("month", "==", month), where("day", "==", day), where("class", "==", currentClass));
-            
+
             unsubscribeAttendance = onSnapshot(q, (querySnapshot) => {
                 // Reset semua select
                 document.querySelectorAll('#attendance-body select').forEach(sel => sel.value = '');
@@ -667,7 +756,7 @@
         // --- EVENT LISTENERS & INISIALISASI ---
         [classSelector, monthSelector, yearSelector, daySelector].forEach(selector => {
             selector.addEventListener('change', () => {
-                if(selector.id === 'year-selector' || selector.id === 'month-selector') {
+                if (selector.id === 'year-selector' || selector.id === 'month-selector') {
                     populateDaySelector();
                     populateWeekSelector();
                 }
@@ -678,13 +767,13 @@
         });
 
         modalCancelBtn.addEventListener('click', hideConfirmation);
-        
+
         document.addEventListener('DOMContentLoaded', () => {
             updateHeader();
             populateDateSelectors();
             populateClassSelector();
             updateNaikKelasButtonState();
-            
+
             onAuthStateChanged(auth, async (user) => {
                 if (user) {
                     userId = user.uid;
@@ -706,4 +795,5 @@
         });
     </script>
 </body>
+
 </html>
