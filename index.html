@@ -163,11 +163,15 @@
 
         // --- Variabel Global & Konfigurasi Firebase ---
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        const firebaseConfig = JSON.parse(
-            typeof __firebase_config !== 'undefined' 
-            ? __firebase_config 
-            : '{}'
-        );
+       const firebaseConfig = {
+            apiKey: "AIzaSyBeaaGL7wbmaa7k3cup2apImvHcT6E0yhM",
+            authDomain: "absensi-online-nagrak.firebaseapp.com",
+            projectId: "absensi-online-nagrak",
+            storageBucket: "absensi-online-nagrak.firebasestorage.app",
+            messagingSenderId: "284464759114",
+            appId: "1:284464759114:web:0f5eb44f9dc24119b001b3",
+            measurementId: "G-VZ0Q81PYQ0"
+        };
         
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
@@ -907,3 +911,4 @@
     </script>
 </body>
 </html>
+
